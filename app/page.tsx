@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-
 async function getPosts() {
+  "use cache"
   const res = await fetch('http://localhost:3000/api/posts', {
     cache: 'no-store',
   });
