@@ -8,7 +8,7 @@ export const posts = sqliteTable("posts", {
     content: text("content")
         .notNull(),
     createdAt: text("createdAt")
-        .default(new Date().toISOString()),
+        .default(new Date().toISOString()).notNull(),
 });
 
 export const comments = sqliteTable("comments", {
@@ -19,5 +19,5 @@ export const comments = sqliteTable("comments", {
     content: text("content")
         .notNull(),
     createdAt: text("createdAt")
-        .default(new Date().toISOString()),
+        .default(new Date().toISOString()).notNull(),
 });

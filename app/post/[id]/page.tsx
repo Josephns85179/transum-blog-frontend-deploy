@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -61,6 +61,7 @@ export default function PostDetail() {
 
   return (
     <main className="container mt-4">
+      <Suspense fallback={<p>Loading post...</p>}>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h3>{post.title}</h3>
         <div>
@@ -116,6 +117,7 @@ export default function PostDetail() {
           ))}
         </ul>
       )}
+      </Suspense>
     </main>
   );
 }
