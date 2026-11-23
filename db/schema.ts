@@ -1,0 +1,23 @@
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+
+export const posts = sqliteTable("posts", {
+    id: integer("id")
+        .primaryKey({ autoIncrement: true }),
+    title: text("title")
+        .notNull(),
+    content: text("content")
+        .notNull(),
+    createdAt: text("createdAt")
+        .default(new Date().toISOString()),
+});
+
+export const comments = sqliteTable("comments", {
+    id: integer("id")
+        .primaryKey({ autoIncrement: true }),
+    postId: integer("postId")
+        .references(() => posts.id),
+    content: text("content")
+        .notNull(),
+    createdAt: text("createdAt")
+        .default(new Date().toISOString()),
+});
