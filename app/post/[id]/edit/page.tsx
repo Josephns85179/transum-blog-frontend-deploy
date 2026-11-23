@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
-export default function EditPost() {
+function EditPostContent() {
   const { id } = useParams();
   const router = useRouter();
   const [title, setTitle] = useState('');
@@ -34,42 +34,50 @@ export default function EditPost() {
     router.push(`/post/${id}`);
   };
 
-  if (loading) return <p className="container mt-4">Loading...</p>;
+  if (loading) return <p className="mt-4">Loading...</p>;
 
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label className="form-label">Title</label>
+        <input
+          className="form-control"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder='Wow LRT so amazing...'
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Content</label>
+        <textarea
+          className="form-control"
+          rows={5}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder='They just opened the new line to Manggarai, cannot wait for the skybridge to open as well...'
+          required
+        />
+      </div>
+      <button type="submit" className="btn btn-success me-2">Update</button>
+      <button 
+        type="button" 
+        className="btn btn-secondary" 
+        onClick={() => router.push(`/post/${id}`)}
+      >
+        Cancel
+      </button>
+    </form>
+  );
+}
+
+export default function EditPost() {
   return (
     <main className="container mt-4">
       <h1>Edit Your Post About Jakarta Public Transit</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Title</label>
-          <input
-            className="form-control"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder='Wow LRT so amazing...'
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Content</label>
-          <textarea
-            className="form-control"
-            rows={5}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder='They just opened the new line to Manggarai, cannot wait for the skybridge to open as well...'
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-success me-2">Update</button>
-        <button 
-          type="button" 
-          className="btn btn-secondary" 
-          onClick={() => router.push(`/post/${id}`)}
-        >
-          Cancel
-        </button>
-      </form>
+      <Suspense fallback={<p className="mt-4">Loading form...</p>}>
+        <EditPostContent />
+      </Suspense>
     </main>
   );
 }
