@@ -18,7 +18,7 @@ interface Post {
   comments: Comment[];
 }
 
-export default function PostDetail() {
+function PostDetailContent() {
   const { id } = useParams();
   const router = useRouter();
   const [post, setPost] = useState<Post | null>(null);
@@ -60,63 +60,71 @@ export default function PostDetail() {
   if (!post) return <p className="container mt-4">Loading...</p>;
 
   return (
-    <main className="container mt-4">
-      <Suspense fallback={<p>Loading post...</p>}>
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h3>{post.title}</h3>
-          <div>
-            <Link href={`/post/${id}/edit`} className="btn btn-secondary me-2">
-              Edit Post
-            </Link>
-            <button onClick={handleDelete} className="btn btn-danger">
-              Delete Post
-            </button>
-            <Link href={`/`} className="btn btn-primary m-2">
-              Back to Home
-            </Link>
-          </div>
-        </div>
-
-        <p className="text-muted">
-          {new Date(post.createdAt).toLocaleDateString('id-ID')}
-        </p>
-        <hr />
-        <p>{post.content}</p>
-
-        <hr className="my-4" />
-
-        <h2>Comments</h2>
-        
-        <form onSubmit={handleCommentSubmit} className="mb-4">
-          <div className="mb-3">
-            <textarea
-              className="form-control"
-              rows={3}
-              placeholder="I like the LRT too..."
-              value={commentContent}
-              onChange={(e) => setCommentContent(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-primary" disabled={submitting}>
-            {submitting ? 'Posting...' : 'Add Comment'}
+    <>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h3>{post.title}</h3>
+        <div>
+          <Link href={`/post/${id}/edit`} className="btn btn-secondary me-2">
+            Edit Post
+          </Link>
+          <button onClick={handleDelete} className="btn btn-danger">
+            Delete Post
           </button>
-        </form>
+          <Link href={`/`} className="btn btn-primary m-2">
+            Back to Home
+          </Link>
+        </div>
+      </div>
 
-        {!post.comments || post.comments.length === 0 ? (
-          <p className="text-muted">No comments yet.</p>
-        ) : (
-          <ul className="list-group mb-4">
-            {post.comments.map((comment) => (
-              <li key={comment.id} className="list-group-item">
-                <p className="mb-1">{comment.content}</p>
-                <small className="text-muted">
-                  {new Date(comment.createdAt).toLocaleDateString('id-ID')}
-                </small>
-              </li>
-            ))}
-          </ul>
-        )}
+      <p className="text-muted">
+        {new Date(post.createdAt).toLocaleDateString('id-ID')}
+      </p>
+      <hr />
+      <p>{post.content}</p>
+
+      <hr className="my-4" />
+
+      <h2>Comments</h2>
+      
+      <form onSubmit={handleCommentSubmit} className="mb-4">
+        <div className="mb-3">
+          <textarea
+            className="form-control"
+            rows={3}
+            placeholder="I like the LRT too..."
+            value={commentContent}
+            onChange={(e) => setCommentContent(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="btn btn-primary" disabled={submitting}>
+          {submitting ? 'Posting...' : 'Add Comment'}
+        </button>
+      </form>
+
+      {!post.comments || post.comments.length === 0 ? (
+        <p className="text-muted">No comments yet.</p>
+      ) : (
+        <ul className="list-group mb-4">
+          {post.comments.map((comment) => (
+            <li key={comment.id} className="list-group-item">
+              <p className="mb-1">{comment.content}</p>
+              <small className="text-muted">
+                {new Date(comment.createdAt).toLocaleDateString('id-ID')}
+              </small>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
+export default function PostDetail() {
+  return (
+    <main className="container mt-4">
+      <Suspense fallback={<p className="container mt-4">Loading post...</p>}>
+        <PostDetailContent />
       </Suspense>
     </main>
   );
