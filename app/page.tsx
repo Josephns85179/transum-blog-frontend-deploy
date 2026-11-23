@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { db } from '@/db';
+import { posts as postsTable } from '@/db/schema';
+
 async function getPosts() {
-  "use cache"
-  const res = await fetch('http://localhost:3000/api/posts', {
-    cache: 'no-store',
-  });
-  return res.json();
+  try {
+    return await db.select().from(postsTable);
+  } catch (error) {
+    console.error('Failed to fetch posts:', error);
+    return [];
+  }
 }
 
 export default async function Home() {
@@ -21,20 +25,20 @@ export default async function Home() {
         <p>No posts yet.</p>
       ) : (
         <ul className="list-group">
-          {posts.map((post: unknown) => (
-            <li key={(post as { id: string }).id} className="list-group-item">
-              <Link href={`/post/${(post as { id: string }).id}`}>
-                {(post as { title: string }).title}
+          {posts.map((post) => (
+            <li key={post.id} className="list-group-item">
+              <Link href={`/post/${post.id}`}>
+                {post.title}
               </Link>
               <span className="text-muted float-end">
-                {new Date((post as { createdAt: string }).createdAt).toLocaleDateString('id-ID')}
+                {new Date(post.createdAt).toLocaleDateString('id-ID')}
               </span>
             </li>
           ))}
         </ul>
       )}
-      <br></br>
-      <Image className="not"src="/plushie.jpeg" alt="hello" width={300} height={700} />
+      <br />
+      <Image className="not" src="/plushie.jpeg" alt="hello" width={300} height={700} />
       <p>Hello</p>
     </main>
   );
